@@ -68,7 +68,7 @@ public abstract class AbstractPathChoiceLogsumMatrixApplication<N extends Node, 
         System.out.println("Writing to " + outputDir);
         Map<NodePair<N>,double[]> logsums = new ConcurrentHashMap<>();
         startTime = System.currentTimeMillis();
-        int threadCount = Runtime.getRuntime().availableProcessors();
+        int threadCount = Runtime.getRuntime().availableProcessors()/2;
         ExecutorService executor = Executors.newFixedThreadPool(threadCount); 
         final Queue<Integer> originQueue = new ConcurrentLinkedQueue<>(zonalCentroidIdMap.keySet());
         final ConcurrentHashMap<Integer,List<Integer>> insufficientSamplePairs = new ConcurrentHashMap<>();
@@ -234,30 +234,8 @@ public abstract class AbstractPathChoiceLogsumMatrixApplication<N extends Node, 
                 
                 double[] logsumValues;
                 for(NodePair<N> odPair : alternativeLists.keySet()) {
-
-                    String pathAltFile = SandagBikePathChoiceModel.getPathAltsFile(propertyMap);
-                    String pathAltLinksFile = SandagBikePathChoiceModel.getPathAltsLinkFile(propertyMap);
-                    try (PathAlternativeListWriter<N,E> writer = new PathAlternativeListWriter<>(pathAltFile,pathAltLinksFile)) {
-                        writer.writeHeaders();
-                        writer.write(alternativeLists.get(odPair));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    
                     logsumValues = calculateMarketSegmentLogsums(alternativeLists.get(odPair));
                     logsums.put(odPair,logsumValues);
-                    
-
-                    try {
-                    	Files.delete(Paths.get(pathAltFile));
-                    } catch (IOException e) {
-                    	logger.warn("problem deleting " + pathAltFile,e);
-                    }
-                    try {
-                    	Files.delete(Paths.get(pathAltLinksFile));
-                    } catch (IOException e) {
-                    	logger.warn("problem deleting " + pathAltLinksFile,e);
-                    }
                 }
                 
                 int c = counter.addAndGet(1); 

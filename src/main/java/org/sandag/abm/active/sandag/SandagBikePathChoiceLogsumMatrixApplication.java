@@ -28,7 +28,7 @@ public class SandagBikePathChoiceLogsumMatrixApplication extends AbstractPathCho
     private Tour[] tours;
     
     public SandagBikePathChoiceLogsumMatrixApplication(PathAlternativeListGenerationConfiguration<SandagBikeNode,SandagBikeEdge,SandagBikeTraversal> configuration, 
-    		                                           final Map<String,String> propertyMap)
+    		                                           final HashMap<String,String> propertyMap)
     {
         super(configuration);
         model = new ThreadLocal<SandagBikePathChoiceModel>() {
@@ -64,7 +64,7 @@ public class SandagBikePathChoiceLogsumMatrixApplication extends AbstractPathCho
     
     public static void main(String ... args) {
         String RESOURCE_BUNDLE_NAME = "sandag_abm_active_test";
-        Map<String,String> propertyMap = new HashMap<String,String>();
+        HashMap<String,String> propertyMap = new HashMap<String,String>();
         SandagBikeNetworkFactory factory;
         Network<SandagBikeNode, SandagBikeEdge, SandagBikeTraversal> network;
         PathAlternativeListGenerationConfiguration<SandagBikeNode, SandagBikeEdge, SandagBikeTraversal> configuration;
